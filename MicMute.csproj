@@ -11,7 +11,7 @@
     <RootNamespace>MicMute</RootNamespace>
     <Product>MicMute</Product>
     <Description>Demp mikrofonen med en hurtigtast</Description>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <RepositoryUrl>https://github.com/LordPanzar/MicMute</RepositoryUrl>
     <!-- .NET is bundled so the app runs on any Windows PC without installing the runtime. -->
