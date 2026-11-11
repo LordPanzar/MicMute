@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<title>MicMute – Innstillinger</title>
+<style>
+:root{--accent:#D13438;--live:#2F9E62;--bg:#17181C;--card:#1B1C21;--line:#26282E;--muted:#A1A4AD;--dim:#8C8F98;--text:#ECEDEF}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#17181C;color:var(--text);font-family:"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;font-size:14px;overflow:hidden;user-select:none}
+input[type=text]{user-select:text}
+button{font-family:inherit;color:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid #8AB4FF;outline-offset:2px}
+h1{margin:0 0 6px;font-family:"Segoe UI Variable Display","Segoe UI",sans-serif;font-size:26px;font-weight:600}
+.sub{margin:0;color:var(--muted);font-size:14px}
+#app{display:flex;flex-direction:column;height:100%}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px 10px 18px;border-bottom:1px solid #24262C;background:#141519}
+.logo{width:26px;height:26px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.brand{font-weight:600;font-size:15px;letter-spacing:.2px}
+.body{display:flex;flex:1 1 auto;min-height:0}
+nav{flex:0 0 220px;padding:16px 12px;border-right:1px solid #24262C;background:#15161A;display:flex;flex-direction:column;gap:4px}
+.nav{display:flex;align-items:center;gap:12px;width:100%;height:42px;padding:0 12px;border-radius:8px;border:0;cursor:pointer;font-size:14px;text-align:left;background:transparent;color:var(--muted);font-weight:500}
+.nav:hover{background:#1D1E23}
+.nav.on{background:#24262D;color:#fff;font-weight:600;box-shadow:inset 3px 0 0 var(--accent)}
+.tip{padding:12px;border-radius:10px;background:#1C1D22;border:1px solid #26282E;font-size:12px;line-height:1.5;color:var(--muted)}
+main{flex:1 1 auto;min-width:0;overflow-y:auto;padding:28px 32px 28px}
+main::-webkit-scrollbar{width:10px}main::-webkit-scrollbar-thumb{background:#2E3138;border-radius:5px;border:2px solid #17181C}
+.stack{display:flex;flex-direction:column;gap:20px;max-width:980px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px}
+.row{display:flex;align-items:center;gap:14px;padding:16px 18px;flex-wrap:wrap}
+.row+.row{border-top:1px solid var(--line)}
+.grow{flex:1 1 260px;min-width:0}
+.t{font-weight:600;font-size:14px}
+.d{color:var(--muted);font-size:13px;margin-top:2px}
+.cap{font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.btn{height:36px;padding:0 14px;border-radius:8px;border:1px solid #33363E;background:#22242A;color:var(--text);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:#2A2C33}
+.btn.big{height:40px;padding:0 16px;border-radius:9px;border-color:#3A3D46;font-size:14px;font-weight:600}
+.btn.danger{border-color:#5A2A2A;background:transparent;color:#F59B95}
+.sw{flex:0 0 auto;width:44px;height:24px;border-radius:12px;border:1px solid #454852;background:#2A2C33;position:relative;cursor:pointer;padding:0;transition:background .15s}
+.sw span{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#A1A4AD;transition:left .15s}
+.sw.on{background:var(--accent);border-color:transparent}.sw.on span{left:23px;background:#fff}
+.opt{display:block;text-align:left;padding:12px;border-radius:10px;cursor:pointer;background:#17181C;border:1px solid #2A2C33}
+.opt:hover{border-color:#3A3D46}
+.opt.on{background:#22242B;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid5{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+@media (max-width:620px){.grid5{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.svgimg{width:100%;height:100%;object-fit:contain;display:block}
+.svgmask{width:100%;height:100%;-webkit-mask:var(--u) center/contain no-repeat;mask:var(--u) center/contain no-repeat}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+input[type=text]{height:34px;width:100%;padding:0 10px;border-radius:8px;background:#15161A;border:1px solid #2A2C33;color:var(--text);font-family:inherit;font-size:13px}
+select{height:36px;padding:0 10px;border-radius:8px;background:#15161A;border:1px solid #33363E;color:var(--text);font-family:inherit;font-size:13px;color-scheme:dark;cursor:pointer}
+kbd{min-width:28px;height:30px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;background:#2A2C33;border:1px solid #3A3D46;border-bottom-width:3px;font-family:inherit;font-size:13px;font-weight:600;color:var(--text)}
+.keybox{min-width:240px;height:46px;padding:0 12px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;cursor:pointer;background:#15161A;border:1px solid #33363E}
+.keybox.rec{border-color:var(--accent);animation:mmrec 1s ease-in-out infinite}
+@keyframes mmrec{50%{box-shadow:0 0 0 4px rgba(240,82,74,.18)}}
+.warn{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:#2A1F12;border:1px solid #5A3F18;color:#F5C67A;font-size:13px}
+.pill{height:32px;padding:0 12px;border-radius:99px;border:0;cursor:pointer;font-size:13px;font-weight:600;color:#C9CBD1;background:#26282E}
+.pill.on{color:#fff;background:var(--accent)}
+.dev{width:100%;display:flex;align-items:center;gap:14px;padding:12px 18px;border:0;background:transparent;cursor:pointer;text-align:left}
+.devrow{display:flex;align-items:center;flex-wrap:wrap}
+.devrow+.devrow{border-top:1px solid #24262C}
+.devrow.on{background:#1F2026}
+.dev{flex:1 1 360px;min-width:0}
+.vol{display:flex;align-items:center;gap:8px;padding:0 18px 0 4px;color:#A1A4AD;font-size:12px}
+.vol input{width:110px}
+.vol b{width:30px;text-align:right;color:#ECEDEF;font-weight:600}
+.chk{flex:0 0 auto;width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid #4A4D57}
+.dev.on .chk{background:var(--accent);border-color:var(--accent)}
+.lvl{flex:0 0 120px;height:6px;border-radius:3px;background:#2A2C33;overflow:hidden}
+.lvl span{display:block;height:100%;width:0;background:#4CC38A;transition:width .12s}
+footer{display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid #24262C;background:#141519}
+.primary{height:38px;padding:0 22px;border-radius:8px;border:0;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.ghost{height:38px;padding:0 18px;border-radius:8px;border:1px solid #33363E;background:transparent;color:var(--text);font-size:14px;cursor:pointer}
+/* preview */
+.screen{position:relative;container-type:inline-size;border-radius:12px;overflow:hidden;background:#101114;border:1px solid #2E3138}
+.mon{position:absolute;background:#22252C;border:1px solid #2E3138}
+.mon .bar{position:absolute;left:0;right:0;bottom:0;background:#1A1C21;border-top:1px solid #2E3138}
+.ind{position:absolute;padding:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mm-blink{animation:mmblink 1.1s steps(2,start) infinite}
+@keyframes mmblink{to{opacity:.2}}
+.lst{width:100%;display:flex;align-items:center;gap:10px;height:42px;padding:0 12px;border-radius:8px;border:0;cursor:pointer;background:transparent}
+.lst.on{background:#26282F}
+.swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;padding:0;border:2px solid transparent;box-shadow:0 0 0 1px #3A3D46}
+.swatch.on{border-color:#fff}
+.custom{position:relative;overflow:hidden;background:conic-gradient(#f44,#fd4,#4f6,#4df,#46f,#f4f,#f44)}
+.custom input{position:absolute;inset:-6px;opacity:0;cursor:pointer}
+code{font-family:Consolas,monospace;font-size:13px}
+</style>
+</head>
+<body>
+<div id="app"><div style="margin:auto;color:#8C8F98">Laster …</div></div>
+<script>
+'use strict';
+const MIC = '<rect x="8.5" y="2" width="7" height="12" rx="3.5" fill="#fff" stroke="none"></rect><path d="M5 11a7 6.5 0 0 0 14 0"></path><path d="M12 17.5V21"></path><path d="M8.5 21.5h7"></path>';
+const ICONS = {
+  general: '<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path>',
+  hotkeys: '<rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"></path>',
+  mic: '<rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path>',
+  indicators: '<rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path><rect x="15" y="6" width="4" height="4" rx="1"></rect>',
+  about: '<circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path>'
+};
+const SECTIONS = [['general', 'Generelt'], ['hotkeys', 'Hurtigtaster'], ['mic', 'Mikrofon'], ['indicators', 'Indikatorer'], ['about', 'Om']];
+const SOUNDS = [
+  ['beep', 'Pip', 'To korte toner'], ['soft', 'Myk', 'Rolig, dempet tone'], ['click', 'Klikk', 'Kort og diskré'],
+  ['bell', 'Klokke', 'Klar klang'], ['marimba', 'Marimba', 'Varm, treaktig tone'], ['pop', 'Pop', 'Boble som spretter'],
+  ['sonar', 'Sonar', 'Ping med ekko'], ['radio', 'Radio', 'Walkie-talkie-sprak'], ['retro', 'Retro', '8-bit-spillyd'],
+  ['scifi', 'Sci-fi', 'Lyd som feier opp/ned'], ['thud', 'Dump', 'Dyp, myk bass'], ['voice', 'Tale', '«Mikrofon av» / «på»'],
+  ['file', 'Egen fil', 'Dine egne .wav-filer']
+];
+const MODES = [
+  ['toggle', 'Veksle', 'Trykk én gang for å dempe, én gang til for å slå på.'],
+  ['ptt', 'Hold for å snakke', 'Mikrofonen er dempet, og er på bare mens du holder tasten.'],
+  ['ptm', 'Hold for å dempe', 'Mikrofonen er på, og dempes bare mens du holder tasten.']
+];
+const MICMODES = [
+  ['default', 'Standardenhet', 'Den Windows bruker som standard'],
+  ['communications', 'Kommunikasjonsenhet', 'Standard for samtaler (Discord, Teams)'],
+  ['all', 'Alle mikrofoner', 'Sikrest: demper alle innganger'],
+  ['device', 'Bestemte enheter', 'Kryss av for én eller flere i listen under']
+];
+const STYLES = [['Icon', 'Ikon'], ['IconPlain', 'Kun ikon'], ['Text', 'Tekst'], ['Dot', 'Prikk'], ['Frame', 'Ramme'], ['Custom', 'Eget ikon']];
+const STYLE_NAMES = { Icon: 'Ikon', IconPlain: 'Kun ikon', Text: 'Tekst', Dot: 'Prikk', Frame: 'Skjermramme', Custom: 'Eget ikon' };
+// Custom SVG: the file for the current state, drawn tinted (mask) or with its own colors.
+function svgFor(ind, muted) { return (!muted && ind.SvgLive) ? ind.SvgLive : ind.SvgMuted; }
+function customIcon(ind, color, muted) {
+  const uri = (U.svgs || {})[svgFor(ind, muted)];
+  if (!uri) return glyph(color, muted, true, 'c' + Math.random().toString(36).slice(2, 7));
+  return ind.SvgTint !== false ? `<span class="svgmask" style="--u:url('${uri}');background:${color}"></span>` : `<img class="svgimg" alt="" src="${uri}">`;
+}
+const MUTED_COLORS = [['#D13438', 'Rød'], ['#C2410C', 'Oransje'], ['#B45309', 'Rav'], ['#7C3AED', 'Lilla'], ['#BE185D', 'Rosa'], ['#F4F4F5', 'Hvit']];
+const LIVE_COLORS = [['#2F9E62', 'Grønn'], ['#0E7490', 'Blågrønn'], ['#2563EB', 'Blå'], ['#4B5563', 'Grå'], ['#65A30D', 'Lime'], ['#F4F4F5', 'Hvit']];
+
+let S = null;          // settings being edited (same shape as settings.json)
+const U = { section: 'general', recording: null, selected: 0, saved: false, error: '', muted: false, noDevice: false,
+  autostart: false, devices: [], screens: [], virt: { x: 0, y: 0, w: 1920, h: 1080 }, version: '', path: '', hotkeyErrors: [] };
+let savedTimer = 0;
+
+const post = (m) => window.chrome.webview.postMessage(m);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sw = (on, fn, label) => `<button class="sw${on ? ' on' : ''}" role="switch" aria-checked="${on}" aria-label="${esc(label)}" onclick="${fn}"><span></span></button>`;
+const svg = (body, size, extra) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra || ''}>${body}</svg>`;
+const parts = (hk) => hk && hk._parts ? hk._parts : [];
+const muteText = () => parts(S.MuteHotkey).length ? parts(S.MuteHotkey).join(' + ') : 'hurtigtasten';
+
+function keyName(e) {
+  const vk = e.keyCode;
+  if ((vk >= 65 && vk <= 90) || (vk >= 48 && vk <= 57)) return String.fromCharCode(vk);
+  if (vk >= 96 && vk <= 105) return 'Num ' + (vk - 96);
+  if (vk >= 112 && vk <= 135) return 'F' + (vk - 111);
+  const map = { 32: 'Mellomrom', 13: 'Enter', 19: 'Pause', 145: 'Scroll Lock', 45: 'Insert', 46: 'Delete', 33: 'Page Up', 34: 'Page Down',
+    36: 'Home', 35: 'End', 37: '←', 38: '↑', 39: '→', 40: '↓', 9: 'Tab', 20: 'Caps Lock', 106: 'Num *', 107: 'Num +', 109: 'Num -',
+    110: 'Num ,', 111: 'Num /', 173: 'Lyd av', 174: 'Volum ned', 175: 'Volum opp', 179: 'Spill/pause' };
+  return map[vk] || (e.key && e.key.length === 1 ? e.key.toUpperCase() : e.key || ('Tast ' + vk));
+}
+
+// ---------- device targeting ----------
+function targeted(d) {
+  switch (S.DeviceMode) {
+    case 'all': return true;
+    case 'device': return S.DeviceIds.includes(d.id);
+    case 'communications': return d.isComm;
+    default: return d.isDefault;
+  }
+}
+
+// ---------- render ----------
+function render() {
+  if (!S) return;
+  const a = document.activeElement, focusId = a && a.id, sel = a && a.selectionStart;
+  const scroll = document.querySelector('main')?.scrollTop || 0;
+  const m = U.muted;
+  document.getElementById('app').innerHTML = `
+<header>
+  <div class="logo">${svg(MIC + '<path d="M3.5 2.5l17 19"></path>', 16, 'stroke="#fff" stroke-width="2.2"')}</div>
+  <div class="brand">MicMute</div><div style="font-size:13px;color:#A1A4AD">Innstillinger</div>
+  <div style="flex:1"></div>
+  <button onclick="A.toggleMute()" style="display:flex;align-items:center;gap:8px;height:32px;padding:0 14px;border-radius:99px;border:0;cursor:pointer;font-size:13px;font-weight:600;${U.noDevice ? 'background:#3A3D46;color:#ECEDEF' : m ? 'background:var(--accent);color:#fff' : 'background:#7FD8A4;color:#0B1A12'}">
+    <span style="width:8px;height:8px;border-radius:50%;background:${m ? '#FF8A82' : '#0B3D22'}"></span>
+    <span>${U.noDevice ? 'Ingen mikrofon funnet' : m ? 'Mikrofon dempet' : 'Mikrofon på'}</span>
+    <span style="opacity:.8;font-weight:500">· ${esc(parts(S.MuteHotkey).join(' + ') || 'ingen hurtigtast')}</span>
+  </button>
+</header>
+<div class="body">
+<nav aria-label="Seksjoner">
+  ${SECTIONS.map(([id, label]) => `<button class="nav${U.section === id ? ' on' : ''}" onclick="A.go('${id}')">${svg(ICONS[id], 18)}<span>${label}</span></button>`).join('')}
+  <div style="flex:1"></div>
+  <div class="tip"><div style="color:#ECEDEF;font-weight:600;margin-bottom:4px">Tips</div>Venstreklikk på ikonet i systemstatusfeltet demper også mikrofonen.</div>
+</nav>
+<main>${({ general: General, hotkeys: Hotkeys, mic: Mic, indicators: Indicators, about: About })[U.section]()}</main>
+</div>
+<footer>
+  ${U.error ? `<span style="font-size:13px;color:#F5C67A">${esc(U.error)}</span>` : U.saved
+    ? '<span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#7FD8A4"><svg width="14" height="14" viewBox="0 0 12 12"><path d="M2.5 6.2l2.3 2.3 4.7-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Lagret</span>'
+    : '<span style="font-size:13px;color:#8C8F98">Endringer tas i bruk når du lagrer.</span>'}
+  <div style="flex:1"></div>
+  <button class="ghost" onclick="A.close()">Lukk</button>
+  <button class="primary" onclick="A.save()">Lagre</button>
+</footer>`;
+  const mainEl = document.querySelector('main');
+  if (mainEl) mainEl.scrollTop = scroll;
+  if (focusId) {
+    const el = document.getElementById(focusId);
+    if (el) { el.focus(); try { if (sel != null) el.setSelectionRange(sel, sel); } catch (e) {} }
+  }
+}
+
+function General() {
+  const m = U.muted;
+  return `<div class="stack">
+<div><h1>Generelt</h1><p class="sub">Status, lyd og oppstart.</p></div>
+<div style="display:flex;align-items:center;gap:22px;padding:22px;border-radius:14px;flex-wrap:wrap;background:${m ? '#24181A' : '#16231C'};border:1px solid ${m ? '#4A2427' : '#22452F'}">
+  <div style="width:88px;height:88px;flex:0 0 auto;border-radius:22px;background:${m ? 'var(--accent)' : 'var(--live)'};display:flex;align-items:center;justify-content:center">
+    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">${MIC}${m ? '<path d="M3.5 2.5l17 19" stroke="var(--accent)" stroke-width="5"></path><path d="M3.5 2.5l17 19"></path>' : ''}</svg>
+  </div>
+  <div style="flex:1 1 240px;min-width:0">
+    <div style="font-size:24px;font-weight:600">${U.noDevice ? 'Fant ingen mikrofon' : m ? 'Mikrofonen er dempet' : 'Mikrofonen er på'}</div>
+    <div style="color:#A1A4AD;font-size:14px;margin-top:4px">${U.noDevice ? 'Sjekk valget under Mikrofon.' : m ? 'Ingen programmer hører deg. Trykk ' + esc(muteText()) + ' for å slå på.' : 'Alle programmer kan høre deg. Trykk ' + esc(muteText()) + ' for å dempe.'}</div>
+  </div>
+  <button class="btn big" style="height:44px;padding:0 20px" onclick="A.toggleMute()">${m ? 'Slå på mikrofon' : 'Demp mikrofon'}</button>
+</div>
+
+<div class="card">
+  <div class="row"><div class="grow"><div class="t">Lydsignal ved av/på</div><div class="d">Hør med en gang om mikrofonen ble dempet eller slått på.</div></div>${sw(S.PlaySounds, 'A.flip(\'PlaySounds\')', 'Lydsignal ved av/på')}</div>
+  ${S.PlaySounds ? `<div style="border-top:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:20px">
+    <div><div class="cap">Lyd</div><div class="grid3" role="radiogroup" aria-label="Lyd">
+      ${SOUNDS.map(([id, label, desc]) => `<button role="radio" aria-checked="${S.SoundType === id}" class="opt${S.SoundType === id ? ' on' : ''}" onclick="A.pickSound('${id}')">
+        <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>${label}</span>
+        <span style="display:block;color:#A1A4AD;font-size:12px;margin-top:4px">${desc}</span></button>`).join('')}
+    </div></div>
+    ${S.SoundType === 'file' ? `<div style="display:flex;flex-direction:column;gap:8px">
+      ${[['mute', 'Ved demping', S.SoundFileMute], ['unmute', 'Ved på', S.SoundFileUnmute]].map(([w, label, f]) => `<div style="display:flex;align-items:center;gap:10px">
+        <span style="flex:0 0 110px;font-size:13px;color:#A1A4AD">${label}</span>
+        <code style="flex:1 1 auto;min-width:0;height:34px;display:flex;align-items:center;padding:0 10px;border-radius:8px;background:#15161A;border:1px solid #2A2C33;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:${f ? '#ECEDEF' : '#6F737C'}">${esc(f || 'Ingen fil valgt – bruker «Pip»')}</code>
+        <button class="btn" style="height:34px" onclick="A.pickFile('${w}')">Velg fil …</button></div>`).join('')}
+    </div>` : ''}
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+      <div style="flex:1 1 220px"><label for="vol" class="cap" style="display:flex;justify-content:space-between;margin-bottom:8px"><span>Volum</span><span id="vol-l" style="color:#ECEDEF">${S.SoundVolume} %</span></label>
+        <input id="vol" type="range" min="0" max="100" step="5" value="${S.SoundVolume}" oninput="A.vol(this.value)" onchange="A.testSound(true)"></div>
+      <fieldset style="flex:1 1 220px;margin:0;padding:0;border:0"><legend class="cap" style="padding:0;margin-bottom:8px">Spill av når</legend>
+        <div style="display:flex;gap:18px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" ${S.SoundOnMute ? 'checked' : ''} onchange="A.flip('SoundOnMute')">Jeg demper</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" ${S.SoundOnUnmute ? 'checked' : ''} onchange="A.flip('SoundOnUnmute')">Jeg slår på</label>
+        </div></fieldset>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="A.testSound(true)"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"></path></svg>Test demping</button>
+      <button class="btn" onclick="A.testSound(false)"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"></path></svg>Test på</button>
+    </div>
+  </div>` : ''}
+</div>
+
+<div class="card">
+  <div class="row"><div class="grow"><div class="t">Start med Windows</div><div class="d">MicMute starter i bakgrunnen når du logger inn.</div></div>${sw(U.autostart, 'A.flipAutostart()', 'Start med Windows')}</div>
+  <div class="row"><div class="grow"><div class="t">Vis varsel ved endring</div><div class="d">Liten melding nede i hjørnet hver gang mikrofonen endres.</div></div>${sw(S.ShowToast, 'A.flip(\'ShowToast\')', 'Vis varsel ved endring')}</div>
+</div>
+</div>`;
+}
+
+function Hotkeys() {
+  const row = (id, label, desc) => {
+    const hk = S[id], p = parts(hk), rec = U.recording === id;
+    return `<div class="row"><div class="grow"><div class="t">${label}</div><div class="d">${desc}</div></div>
+      <button id="hk-${id}" class="keybox${rec ? ' rec' : ''}" onclick="A.rec('${id}')" aria-label="${label}: ${esc(p.join(' + ') || 'ingen')}. Klikk for å endre.">
+        ${rec ? '<span style="color:#F0A29D;font-size:13px">Trykk tastene nå …</span>'
+        : p.length ? p.map((k, i) => (i ? '<span style="color:#6F737C;font-size:12px">+</span>' : '') + `<kbd>${esc(k)}</kbd>`).join('')
+        : '<span style="color:#8C8F98;font-size:13px">Ingen – klikk for å velge</span>'}
+      </button>
+      <button onclick="A.clearKey('${id}')" aria-label="Fjern hurtigtast" style="width:36px;height:36px;border-radius:8px;border:1px solid #33363E;background:transparent;color:#A1A4AD;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></button>
+    </div>`;
+  };
+  const conflict = parts(S.MuteHotkey).length && parts(S.MuteHotkey).join('+') === parts(S.EditHotkey).join('+');
+  return `<div class="stack">
+<div><h1>Hurtigtaster</h1><p class="sub">Klikk på en tast og trykk ønsket tast eller kombinasjon. Backspace eller Esc fjerner den.</p></div>
+<div class="card">
+  ${row('MuteHotkey', 'Demp / slå på', 'Fungerer overalt, også i spill.')}
+  ${row('EditHotkey', 'Redigeringsmodus', 'Åpner Indikatorer, der du kan flytte og skalere dem på skjermen.')}
+</div>
+<div class="card">
+  <div class="row"><div class="grow"><div class="t">Tast som ikke finnes på tastaturet</div>
+    <div class="d">F13–F24 kan sendes fra G HUB, makrotaster eller Stream Deck uten Ctrl/Alt/Shift, så ingenting annet utløses. Virker også om du holder inne andre taster samtidig.</div></div>
+    <select aria-label="Velg F13–F24 som demp-tast" onchange="A.extraKey(this.value)" style="height:36px;min-width:120px">
+      <option value="">Velg …</option>
+      ${Array.from({ length: 12 }, (_, i) => 13 + i).map((n) => `<option value="${n}"${S.MuteHotkey && S.MuteHotkey.Key === 111 + n && !S.MuteHotkey.Ctrl && !S.MuteHotkey.Alt && !S.MuteHotkey.Shift && !S.MuteHotkey.Win ? ' selected' : ''}>F${n}</option>`).join('')}
+    </select></div>
+</div>
+${conflict ? '<div class="warn">De to hurtigtastene er like. Velg en annen for redigeringsmodus.</div>' : ''}
+${U.hotkeyErrors.length ? `<div class="warn">${esc(U.hotkeyErrors.join(', '))} brukes allerede av Windows eller et annet program. Velg en annen.</div>` : ''}
+<div><div class="t" style="margin-bottom:10px">Virkemåte</div>
+  <div class="grid3" role="radiogroup" aria-label="Virkemåte" style="gap:10px">
+    ${MODES.map(([id, label, desc]) => `<button role="radio" aria-checked="${S.HotkeyMode === id}" class="opt${S.HotkeyMode === id ? ' on' : ''}" style="padding:14px" onclick="A.set('HotkeyMode','${id}')">
+      <div class="t">${label}</div><div style="color:#A1A4AD;font-size:12px;margin-top:4px;line-height:1.4">${desc}</div></button>`).join('')}
+  </div>
+</div>
+</div>`;
+}
+
+function Mic() {
+  const n = U.devices.filter(targeted).length;
+  return `<div class="stack">
+<div><h1>Mikrofon</h1><p class="sub">Velg hvilke opptaksenheter som dempes. Dempingen skjer i Windows, så alle programmer får stillhet.</p></div>
+<div class="grid2" role="radiogroup" aria-label="Hvilke mikrofoner">
+  ${MICMODES.map(([id, label, desc]) => {
+    const on = S.DeviceMode === id;
+    return `<button role="radio" aria-checked="${on}" class="opt${on ? ' on' : ''}" style="display:flex;align-items:center;gap:12px;padding:14px;box-shadow:none" onclick="A.micMode('${id}')">
+      <span style="flex:0 0 auto;width:18px;height:18px;border-radius:50%;border:${on ? '5px solid var(--accent)' : '2px solid #4A4D57'};background:#fff"></span>
+      <span style="display:flex;flex-direction:column;gap:3px"><span class="t">${label}</span><span style="color:#A1A4AD;font-size:12px">${desc}</span></span></button>`;
+  }).join('')}
+</div>
+<div class="card">
+  <div style="padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-size:13px;color:#A1A4AD">
+    <span style="font-weight:600;color:#ECEDEF">Enheter</span>
+    <span>· ${n === 0 ? 'Ingen valgt – kryss av minst én enhet' : n + ' av ' + U.devices.length + ' dempes med hurtigtasten'}</span>
+  </div>
+  ${U.devices.length ? U.devices.map((d, i) => {
+    const t = targeted(d), tags = [d.isDefault && 'Standardenhet', d.isComm && 'Kommunikasjon'].filter(Boolean).join(' · ');
+    return `<div class="devrow${t ? ' on' : ''}"><button class="dev${t ? ' on' : ''}" aria-pressed="${t}" onclick="A.pickDevice(${i})">
+      <span class="chk">${t ? '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.2l2.3 2.3 4.7-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>' : ''}</span>
+      <span style="flex:1 1 200px;min-width:0"><span style="display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(d.name)}</span>
+      <span style="display:block;font-size:12px;color:#8C8F98;margin-top:2px">${tags || '&nbsp;'}</span></span>
+      <span class="lvl" title="Nivå (vises når et program bruker mikrofonen)"><span id="lvl-${i}"></span></span>
+      <span style="flex:0 0 84px;text-align:right;font-size:12px;font-weight:600;color:${t ? (U.muted ? '#F59B95' : '#7FD8A4') : '#8C8F98'}">${t ? (U.muted ? 'Dempet' : 'På') : 'Ikke valgt'}</span>
+    </button>
+    ${d.volume == null ? `<span class="vol" aria-hidden="true" style="visibility:hidden"><svg width="14" height="14"></svg><b>100</b><input type="range" tabindex="-1" disabled></span>` : `<label class="vol" title="Inngangsvolum i Windows">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${MIC}</svg>
+      <b id="vol-n-${i}">${d.volume}</b>
+      <input id="vol-${i}" type="range" min="0" max="100" step="1" value="${d.volume}" aria-label="Inngangsvolum for ${esc(d.name)}" oninput="A.micVol(${i}, this.value)">
+    </label>`}</div>`;
+  }).join('') : '<div style="padding:18px;color:#A1A4AD">Fant ingen aktive mikrofoner.</div>'}
+</div>
+</div>`;
+}
+
+// --- indicator preview ---
+function glyph(color, slashed, clean, id) {
+  if (clean) {
+    return `<svg width="100%" height="100%" viewBox="0 0 24 24"><defs><mask id="mk-${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"></rect>${slashed ? '<path d="M3.5 2.5l17 19" stroke="#000" stroke-width="5" stroke-linecap="round"></path>' : ''}</mask></defs>
+      <g mask="url(#mk-${id})" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"><rect x="8.5" y="2" width="7" height="12" rx="3.5" fill="${color}" stroke="none"></rect><path d="M5 11a7 6.5 0 0 0 14 0M12 17.5V21M8.5 21.5h7"></path></g>
+      ${slashed ? `<path d="M3.5 2.5l17 19" stroke="${color}" stroke-width="2" stroke-linecap="round"></path>` : ''}</svg>`;
+  }
+  return `<svg width="62%" height="62%" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">${MIC}${slashed ? `<path d="M3.5 2.5l17 19" stroke="${color}" stroke-width="5"></path><path d="M3.5 2.5l17 19"></path>` : ''}</svg>`;
+}
+
+function preview() {
+  const v = U.virt, pct = (n, d) => (n / d * 100).toFixed(3) + '%';
+  const showMuted = U.muted;
+  const mons = U.screens.map((s) => `<div class="mon" style="left:${pct(s.x - v.x, v.w)};top:${pct(s.y - v.y, v.h)};width:${pct(s.w, v.w)};height:${pct(s.h, v.h)}">
+    <div class="bar" style="height:${pct(Math.max(0, s.y + s.h - (s.wy + s.wh)), s.h)}"></div></div>`).join('');
+  const inds = S.Indicators.map((ind, n) => {
+    const color = showMuted ? ind.MutedColor : ind.LiveColor;
+    const visible = showMuted || ind.ShowWhenLive;
+    const isSel = n === U.selected;
+    const op = visible ? ind.Opacity / 100 : 0.18;
+    const frame = ind.Style === 'Frame';
+    const anim = ind.Blink && showMuted ? 'mm-blink' : '';
+    const outline = isSel ? 'outline:1.5px dashed #ECEDEF;outline-offset:.4cqw;' : (visible ? '' : 'outline:1px dashed #6F737C;outline-offset:.3cqw;');
+    let x = ind.X, y = ind.Y, w = ind.Width, h = ind.Height;
+    if (['Icon', 'IconPlain', 'Dot'].includes(ind.Style)) { const s = Math.min(w, h); x += (w - s) / 2; y += (h - s) / 2; w = h = s; }
+    const r = { Icon: '22%', IconPlain: '30%', Text: '99px', Dot: '50%' }[ind.Style] || '0';
+    const hc = h / v.w * 100; // height in cqw
+    let inner = '';
+    if (ind.Style === 'Icon') inner = `<span style="width:100%;height:100%;border-radius:22%;background:${color};display:flex;align-items:center;justify-content:center">${glyph(color, showMuted, false)}</span>`;
+    else if (ind.Style === 'IconPlain') inner = glyph(color, showMuted, true, n);
+    else if (ind.Style === 'Text') inner = `<span style="width:100%;height:100%;border-radius:99px;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${(hc * 0.42).toFixed(3)}cqw;white-space:nowrap;overflow:hidden">${esc(showMuted ? ind.Text : ind.LiveText)}</span>`;
+    else if (ind.Style === 'Custom') inner = customIcon(ind, color, showMuted);
+    else if (ind.Style === 'Dot') inner = `<span style="width:100%;height:100%;border-radius:50%;background:${color};border:${Math.max(0.15, hc * 0.07).toFixed(3)}cqw solid #fff"></span>`;
+    const box = frame
+      ? `left:${pct(x - v.x, v.w)};top:${pct(y - v.y, v.h)};width:${pct(w, v.w)};height:${pct(h, v.h)};border:${Math.max(0.25, ind.Thickness / v.w * 100).toFixed(3)}cqw solid ${color};`
+      : `left:${pct(x - v.x, v.w)};top:${pct(y - v.y, v.h)};width:${pct(w, v.w)};height:${pct(h, v.h)};`;
+    return `<button class="ind ${anim}" onclick="A.select(${n})" aria-label="Velg indikator ${n + 1}: ${STYLE_NAMES[ind.Style]}" style="${box}${outline}opacity:${op};--c:${color};--r:${r}">${inner}</button>`;
+  }).join('');
+  const label = showMuted ? 'Forhåndsvisning · mikrofon dempet' : 'Forhåndsvisning · mikrofon på';
+  return `<div class="screen" style="aspect-ratio:${v.w} / ${v.h}">${mons}${inds}
+    <span style="position:absolute;left:1.4%;bottom:7.5%;font-size:1.2cqw;color:#A1A4AD;background:rgba(13,14,17,.7);padding:.3cqw .8cqw;border-radius:.6cqw">${label}</span></div>`;
+}
+
+function where(ind) {
+  if (ind.Style === 'Frame') return 'Skjermramme';
+  const s = U.screens.find((s) => ind.X + ind.Width / 2 >= s.x && ind.X + ind.Width / 2 < s.x + s.w && ind.Y + ind.Height / 2 >= s.y && ind.Y + ind.Height / 2 < s.y + s.h) || U.screens[0];
+  if (!s) return '';
+  const cx = (ind.X + ind.Width / 2 - s.x) / s.w, cy = (ind.Y + ind.Height / 2 - s.y) / s.h;
+  const y = cy < 0.4 ? 'Oppe' : cy > 0.6 ? 'Nede' : 'Midt';
+  const x = cx < 0.33 ? 'til venstre' : cx > 0.66 ? 'til høyre' : 'i midten';
+  return y + ' ' + x + (U.screens.length > 1 ? ' · skjerm ' + (U.screens.indexOf(s) + 1) : '');
+}
+
+function Indicators() {
+  const sel = S.Indicators[U.selected];
+  const selColor = sel ? sel.MutedColor : 'var(--accent)';
+  const styleIcon = (k) => ({
+    Icon: `<span style="width:30px;height:30px;border-radius:8px;background:${selColor};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round">${MIC}<path d="M3.5 2.5l17 19"></path></svg></span>`,
+    IconPlain: `<span style="width:28px;height:28px">${glyph(selColor, true, true, 'pick')}</span>`,
+    Text: `<span style="padding:4px 8px;border-radius:99px;background:${selColor};color:#fff;font-size:9px;font-weight:700;letter-spacing:.3px">AV</span>`,
+    Dot: `<span style="width:16px;height:16px;border-radius:50%;background:${selColor};border:2px solid #fff"></span>`,
+    Frame: `<span style="width:38px;height:26px;border:3px solid ${selColor};border-radius:3px"></span>`,
+    Custom: sel && sel.SvgMuted && (U.svgs || {})[sel.SvgMuted] ? `<span style="width:28px;height:28px;display:flex">${customIcon(sel, selColor, true)}</span>`
+      : `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="${selColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"></path></svg>`
+  })[k];
+  const swatches = (list, key) => {
+    const cur = (sel[key] || '').toLowerCase();
+    const custom = !list.some(([hex]) => hex.toLowerCase() === cur);
+    return list.map(([hex, name]) => `<button class="swatch${hex.toLowerCase() === cur ? ' on' : ''}" style="background:${hex}" aria-label="${name}" onclick="A.setInd('${key}','${hex}')"></button>`).join('') +
+      `<label class="swatch custom${custom ? ' on' : ''}" title="Egen farge" ${custom ? `style="background:${esc(sel[key])}"` : ''}><input type="color" value="${esc(sel[key])}" onchange="A.setInd('${key}', this.value.toUpperCase())"></label>`;
+  };
+  const toggle = (key, label, desc) => `<div style="display:flex;align-items:center;gap:14px;padding:12px 0"><div style="flex:1"><div class="t">${label}</div><div style="color:#A1A4AD;font-size:12px;margin-top:2px">${desc}</div></div>${sw(!!sel[key], `A.setInd('${key}', ${!sel[key]})`, label)}</div>`;
+
+  return `<div class="stack">
+<div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
+  <div style="flex:1 1 300px"><h1>Indikatorer</h1><p class="sub">Mens denne siden er åpen kan du dra og skalere indikatorene direkte på skjermen (musehjul skalerer, høyreklikk for flere valg). De låses igjen når du forlater siden. Endringer her vises og lagres med en gang.</p></div>
+</div>
+${preview()}
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+  <div class="card" style="flex:1 1 240px;min-width:0;padding:8px">
+    ${S.Indicators.map((ind, n) => `<button class="lst${n === U.selected ? ' on' : ''}" onclick="A.select(${n})">
+      <span style="width:14px;height:14px;border-radius:${ind.Style === 'Dot' ? '50%' : '4px'};background:${ind.MutedColor};flex:0 0 auto"></span>
+      <span style="flex:1;text-align:left;font-size:14px;font-weight:500">${n + 1}. ${STYLE_NAMES[ind.Style]}</span>
+      <span style="font-size:12px;color:#8C8F98">${where(ind)}</span></button>`).join('')}
+    <button onclick="A.addInd()" style="width:100%;height:40px;margin-top:6px;border-radius:8px;border:1px dashed #3A3D46;background:transparent;color:#A1A4AD;font-size:13px;font-weight:600;cursor:pointer">+ Legg til indikator</button>
+  </div>
+  ${sel ? `<div class="card" style="flex:2 1 380px;min-width:0;padding:18px;display:flex;flex-direction:column;gap:18px">
+    <div><div class="cap">Stil</div><div class="grid5" role="radiogroup" aria-label="Stil">
+      ${STYLES.map(([k, label]) => `<button role="radio" aria-checked="${sel.Style === k}" class="opt${sel.Style === k ? ' on' : ''}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;box-shadow:none" onclick="A.style('${k}')">
+        <span style="height:34px;display:flex;align-items:center;justify-content:center">${styleIcon(k)}</span><span style="font-size:12px;font-weight:500">${label}</span></button>`).join('')}
+    </div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:18px">
+      <div style="flex:1 1 200px"><div class="cap">Farge når dempet</div><div style="display:flex;gap:8px;flex-wrap:wrap">${swatches(MUTED_COLORS, 'MutedColor')}</div></div>
+      <div style="flex:1 1 200px"><div class="cap">Farge når på</div><div style="display:flex;gap:8px;flex-wrap:wrap">${swatches(LIVE_COLORS, 'LiveColor')}</div></div>
+    </div>
+    ${sel.Style === 'Text' ? `<div style="display:flex;flex-wrap:wrap;gap:18px">
+      <div style="flex:1 1 200px"><label class="cap" for="txt-m" style="display:block">Tekst når dempet</label><input id="txt-m" type="text" maxlength="40" value="${esc(sel.Text)}" oninput="A.text('Text', this.value)"></div>
+      <div style="flex:1 1 200px"><label class="cap" for="txt-l" style="display:block">Tekst når på</label><input id="txt-l" type="text" maxlength="40" value="${esc(sel.LiveText)}" oninput="A.text('LiveText', this.value)"></div>
+    </div>` : ''}
+    ${sel.Style === 'Custom' ? `<div style="display:flex;flex-direction:column;gap:12px">
+      ${[['SvgMuted', 'svgMuted', 'Ikon når dempet', 'Påkrevd.'], ['SvgLive', 'svgLive', 'Ikon når på', 'Valgfritt – ellers brukes samme ikon.']].map(([key, which, label, hint]) => {
+        const p = sel[key] || '', uri = (U.svgs || {})[p];
+        return `<div style="display:flex;align-items:center;gap:12px">
+          <span style="width:40px;height:40px;border-radius:8px;background:#15161A;border:1px solid #2A2C33;display:flex;align-items:center;justify-content:center;padding:6px;flex:0 0 auto">${uri ? `<img class="svgimg" alt="" src="${uri}">` : '<span style="color:#6F737C;font-size:11px">–</span>'}</span>
+          <div style="flex:1;min-width:0"><div class="t">${label}</div><div style="color:#A1A4AD;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(p)}">${p ? esc(p.split(/[\/]/).pop()) : hint}</div></div>
+          <button class="btn" onclick="A.pickFile('${which}')">Velg SVG …</button>
+          ${p && key === 'SvgLive' ? `<button class="btn" onclick="A.setInd('SvgLive', '')" aria-label="Fjern ikon når på">Fjern</button>` : ''}
+        </div>`;
+      }).join('')}
+      ${toggle('SvgTint', 'Farg ikonet', 'Bruker fargene over. Slå av for å beholde SVG-filens egne farger.')}
+    </div>` : ''}
+    ${sel.Style === 'Frame' ? `<div><label for="thick" class="cap" style="display:flex;justify-content:space-between;margin-bottom:8px"><span>Tykkelse</span><span id="thick-l" style="color:#ECEDEF">${sel.Thickness} px</span></label>
+      <input id="thick" type="range" min="2" max="40" step="1" value="${sel.Thickness}" oninput="A.range('Thickness', this.value, 'thick-l', ' px')" onchange="render()"></div>` : ''}
+    <div><label for="opa" class="cap" style="display:flex;justify-content:space-between;margin-bottom:8px"><span>Synlighet</span><span id="opa-l" style="color:#ECEDEF">${sel.Opacity} %</span></label>
+      <input id="opa" type="range" min="20" max="100" step="5" value="${sel.Opacity}" oninput="A.range('Opacity', this.value, 'opa-l', ' %')" onchange="render()"></div>
+    <div style="border-top:1px solid var(--line);margin:0 -18px;padding:0 18px">
+      ${toggle('ShowWhenLive', 'Vis også når mikrofonen er på', 'Bytter til «på»-fargen i stedet for å skjules.')}
+      ${toggle('Blink', 'Blink når dempet', 'Trekker blikket mot indikatoren.')}
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="A.dupInd()">Dupliser</button>
+      <button class="btn danger" onclick="A.delInd()">Slett</button>
+    </div>
+  </div>` : '<div class="card" style="flex:2 1 380px;padding:18px;color:#A1A4AD">Ingen indikatorer. Legg til en for å se når mikrofonen er dempet.</div>'}
+</div>
+</div>`;
+}
+
+function UpdateCard() {
+  const u = U.update || { state: 'idle' };
+  const busy = u.state === 'checking' || u.state === 'downloading' || u.state === 'installing';
+  let title = 'Oppdateringer', text = 'Se etter en nyere versjon på GitHub.', action = '';
+  switch (u.state) {
+    case 'checking': text = 'Ser etter oppdateringer …'; break;
+    case 'none': title = 'Du har nyeste versjon'; text = `Versjon ${esc(u.current)} er den nyeste.`; break;
+    case 'available':
+      title = `Versjon ${esc(u.latest)} er tilgjengelig`;
+      text = `Du har ${esc(u.current)}.` + (u.installed ? ' Oppdateringen lastes ned og installeres, og MicMute starter på nytt av seg selv.' : ' Denne kopien er ikke installert – installer MicMute med installasjonsfilen for å kunne oppdatere herfra.');
+      action = u.installed ? `<button class="btn primary" onclick="A.installUpdate()">Oppdater nå</button>` : `<button class="btn" onclick="A.openUrl(U.update.page)">Åpne nedlastingssiden</button>`;
+      break;
+    case 'downloading': title = 'Laster ned oppdatering …'; text = `<span style="display:block;height:6px;border-radius:3px;background:#2A2C33;overflow:hidden;margin-top:8px"><span style="display:block;height:100%;width:${Math.round((u.progress || 0) * 100)}%;background:var(--accent)"></span></span>`; break;
+    case 'installing': title = 'Installerer …'; text = 'MicMute lukkes og starter igjen om et øyeblikk.'; break;
+    case 'error': title = 'Kunne ikke se etter oppdateringer'; text = esc(u.error || 'Ukjent feil'); break;
+  }
+  const notes = u.state === 'available' && u.notes ? `<div style="margin-top:12px;padding:10px 12px;border-radius:8px;background:#15161A;color:#C9CBD1;font-size:12px;white-space:pre-wrap;max-height:160px;overflow:auto">${esc(u.notes)}</div>` : '';
+  return `<div class="card" style="padding:16px 18px">
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <div class="grow" style="flex:1 1 240px;min-width:0"><div class="t">${title}</div><div class="d" aria-live="polite">${text}</div></div>
+    ${action || `<button class="btn" ${busy ? 'disabled' : ''} onclick="A.checkUpdate()">Se etter oppdateringer</button>`}
+  </div>
+  ${notes}
+  <div class="row" style="padding:14px 0 0;margin-top:14px;border-top:1px solid var(--line)"><div class="grow"><div class="t">Se etter oppdateringer automatisk</div><div class="d">Ved oppstart og noen ganger om dagen. Du får beskjed i systemstatusfeltet.</div></div>${sw(S.CheckUpdates !== false, 'A.flip('CheckUpdates')', 'Se etter oppdateringer automatisk')}</div>
+</div>`;
+}
+
+function About() {
+  const r = (k, v, last) => `<div style="display:flex;gap:12px;padding:14px 0;${last ? '' : 'border-bottom:1px solid var(--line);'}flex-wrap:wrap"><span style="flex:0 0 160px;color:#A1A4AD;font-size:13px">${k}</span><span style="flex:1 1 260px;font-size:13px">${v}</span></div>`;
+  return `<div class="stack">
+<div><h1>Om MicMute</h1><p class="sub">Versjon ${esc(U.version)}</p></div>
+${UpdateCard()}
+<div class="card" style="padding:4px 18px">
+  ${r('Innstillingsfil', `<code style="overflow-wrap:anywhere">${esc(U.path)}</code>`)}
+  ${r('Fullskjerm i spill', 'Bruk «vindu uten kantlinje» for at indikatoren skal synes over spillet.')}
+  ${r('Administrator', 'Kjører et spill som administrator, må MicMute også gjøre det for at hurtigtasten skal virke i spillet.')}
+  ${r('Kildekode', `<a href="#" onclick="A.openUrl(U.repo);return false" style="color:#8AB4F8">${esc((U.repo || '').replace('https://', ''))}</a>`, true)}
+</div>
+</div>`;
+}
+
+// ---------- actions ----------
+function dirty() { U.saved = false; U.error = ''; }
+// Indicator edits are applied live (and saved) by the app.
+let liveTimer = 0;
+function live(now) {
+  const send = () => post({ type: 'indicators', indicators: S.Indicators });
+  clearTimeout(liveTimer);
+  if (now) send(); else liveTimer = setTimeout(send, 60);
+}
+function screenOf(x, y) {
+  return U.screens.find((s) => x >= s.x && x < s.x + s.w && y >= s.y && y < s.y + s.h) || U.screens.find((s) => s.primary) || U.screens[0];
+}
+const A = {
+  go(sec) { U.section = sec; U.recording = null; post({ type: 'section', section: sec }); render(); },
+  toggleMute() { post({ type: 'toggleMute' }); },
+  flip(k) { S[k] = !S[k]; dirty(); render(); },
+  set(k, v) { S[k] = v; dirty(); render(); },
+  flipAutostart() { U.autostart = !U.autostart; dirty(); render(); },
+  pickSound(id) { S.SoundType = id; dirty(); render(); A.testSound(true); },
+  vol(v) { S.SoundVolume = Number(v); document.getElementById('vol-l').textContent = v + ' %'; dirty(); },
+  testSound(muted) { post({ type: 'testSound', sound: S.SoundType, muted, volume: S.SoundVolume, fileMute: S.SoundFileMute, fileUnmute: S.SoundFileUnmute }); },
+  pickFile(which) { post({ type: 'pickFile', which }); },
+  rec(id) {
+    if (U.recording === id) return;
+    U.recording = id; post({ type: 'recordStart' }); render();
+    document.getElementById('hk-' + id)?.focus();
+  },
+  stopRec() { if (!U.recording) return; U.recording = null; post({ type: 'recordStop' }); render(); },
+  clearKey(id) { S[id] = { Key: 0, Ctrl: false, Alt: false, Shift: false, Win: false, _parts: [] }; dirty(); A.stopRec(); render(); },
+  extraKey(n) {
+    if (!n) return;
+    S.MuteHotkey = { Key: 111 + Number(n), Ctrl: false, Alt: false, Shift: false, Win: false, _parts: ['F' + n] };
+    dirty(); render();
+  },
+  checkUpdate() { post({ type: 'checkUpdate' }); },
+  installUpdate() { post({ type: 'installUpdate' }); },
+  openUrl(url) { if (url) post({ type: 'openUrl', url }); },
+  micVol(i, v) {
+    const d = U.devices[i]; if (!d) return;
+    d.volume = Number(v);
+    const n = document.getElementById('vol-n-' + i); if (n) n.textContent = v;
+    post({ type: 'volume', id: d.id, value: d.volume });
+  },
+  micMode(id) { S.DeviceMode = id; dirty(); render(); },
+  pickDevice(i) {
+    const d = U.devices[i];
+    const base = S.DeviceMode === 'device' ? S.DeviceIds.slice() : U.devices.filter(targeted).map((x) => x.id);
+    S.DeviceIds = base.includes(d.id) ? base.filter((x) => x !== d.id) : base.concat([d.id]);
+    S.DeviceMode = 'device'; dirty(); render();
+  },
+  select(n) { U.selected = n; render(); },
+  setInd(k, v) { const sel = S.Indicators[U.selected]; if (!sel) return; sel[k] = v; live(true); render(); },
+  text(k, v) { const sel = S.Indicators[U.selected]; if (!sel) return; sel[k] = v; live(); },
+  range(k, v, labelId, unit) { const sel = S.Indicators[U.selected]; if (!sel) return; sel[k] = Number(v); document.getElementById(labelId).textContent = v + unit; live(); },
+  style(k) {
+    const sel = S.Indicators[U.selected]; if (!sel || sel.Style === k) return;
+    const cx = sel.X + sel.Width / 2, cy = sel.Y + sel.Height / 2;
+    const scr = screenOf(cx, cy);
+    const size = { Icon: [72, 72], IconPlain: [72, 72], Custom: [72, 72], Text: [300, 64], Dot: [36, 36] }[k];
+    if (k === 'Frame') { Object.assign(sel, { X: scr.x, Y: scr.y, Width: scr.w, Height: scr.h }); }
+    else if (sel.Style === 'Frame') { Object.assign(sel, { X: Math.round(scr.x + scr.w / 2 - size[0] / 2), Y: Math.round(scr.y + scr.h / 2 - size[1] / 2), Width: size[0], Height: size[1] }); }
+    else if (!(['Icon', 'IconPlain', 'Custom'].includes(k) && ['Icon', 'IconPlain', 'Custom'].includes(sel.Style))) {
+      Object.assign(sel, { X: Math.round(cx - size[0] / 2), Y: Math.round(cy - size[1] / 2), Width: size[0], Height: size[1] });
+    }
+    sel.Style = k; live(true); render();
+    if (k === 'Custom' && !sel.SvgMuted) A.pickFile('svgMuted');
+  },
+  addInd() {
+    const scr = U.screens.find((s) => s.primary) || U.screens[0] || { wx: 0, wy: 0 };
+    const n = S.Indicators.length;
+    S.Indicators.push({ Style: 'Dot', X: scr.wx + 24, Y: scr.wy + 24 + (n % 6) * 52, Width: 36, Height: 36, MutedColor: '#D13438', LiveColor: '#2F9E62',
+      ShowWhenLive: false, Blink: false, Opacity: 100, Text: 'MIKROFON AV', LiveText: 'MIKROFON PÅ', Thickness: 6, SvgMuted: '', SvgLive: '', SvgTint: true });
+    U.selected = S.Indicators.length - 1; live(true); render();
+  },
+  dupInd() {
+    const sel = S.Indicators[U.selected]; if (!sel) return;
+    const c = Object.assign({}, sel);
+    if (c.Style !== 'Frame') { c.X += 30; c.Y += 30; }
+    S.Indicators.push(c); U.selected = S.Indicators.length - 1; live(true); render();
+  },
+  delInd() { S.Indicators.splice(U.selected, 1); U.selected = Math.max(0, Math.min(U.selected, S.Indicators.length - 1)); live(true); render(); },
+  save() {
+    if (parts(S.MuteHotkey).length && parts(S.MuteHotkey).join('+') === parts(S.EditHotkey).join('+')) {
+      U.error = 'De to hurtigtastene kan ikke være like.'; U.section = 'hotkeys'; render(); return;
+    }
+    post({ type: 'save', settings: S, autostart: U.autostart });
+  },
+  close() { post({ type: 'close' }); }
+};
+
+// Hotkey recording (document-level so re-rendering never loses keys).
+document.addEventListener('keydown', (e) => {
+  if (!U.recording) return;
+  e.preventDefault(); e.stopPropagation();
+  if ([16, 17, 18, 91, 92].includes(e.keyCode)) return;
+  const id = U.recording;
+  if ([8, 27, 46].includes(e.keyCode) && !e.ctrlKey && !e.altKey && !e.shiftKey) { A.clearKey(id); return; }
+  const hk = { Key: e.keyCode, Ctrl: e.ctrlKey, Alt: e.altKey, Shift: e.shiftKey, Win: e.metaKey, _parts: [] };
+  if (hk.Ctrl) hk._parts.push('Ctrl'); if (hk.Alt) hk._parts.push('Alt'); if (hk.Shift) hk._parts.push('Shift'); if (hk.Win) hk._parts.push('Win');
+  hk._parts.push(keyName(e));
+  S[id] = hk; dirty(); A.stopRec();
+}, true);
+document.addEventListener('mousedown', (e) => { if (U.recording && !e.target.closest('.keybox')) A.stopRec(); }, true);
+window.addEventListener('blur', () => A.stopRec());
+
+// ---------- messages from the app ----------
+window.chrome.webview.addEventListener('message', (ev) => {
+  const m = ev.data;
+  switch (m.type) {
+    case 'init':
+      S = m.settings;
+      S.MuteHotkey._parts = m.muteParts; S.EditHotkey._parts = m.editParts;
+      Object.assign(U, { muted: m.muted, noDevice: m.noDevice, autostart: m.autostart, devices: m.devices, screens: m.screens, virt: m.virt, version: m.version, path: m.path, hotkeyErrors: m.hotkeyErrors || [] });
+      U.svgs = m.svgs || {}; U.update = m.update; U.repo = m.repo;
+      if (m.section) U.section = m.section;
+      U.selected = Math.min(U.selected, Math.max(0, S.Indicators.length - 1));
+      render();
+      post({ type: 'section', section: U.section });
+      break;
+    case 'state': U.muted = m.muted; U.noDevice = m.noDevice; render(); break;
+    case 'saved':
+      U.saved = m.ok; U.error = m.ok ? '' : m.error; U.hotkeyErrors = m.hotkeyErrors || [];
+      if (m.hotkeyErrors && m.hotkeyErrors.length) U.error = 'Lagret, men en hurtigtast er opptatt – se Hurtigtaster.';
+      render();
+      clearTimeout(savedTimer); savedTimer = setTimeout(() => { U.saved = false; render(); }, 2500);
+      break;
+    case 'indicators':
+      S.Indicators = m.indicators; U.selected = Math.min(U.selected, Math.max(0, S.Indicators.length - 1)); render(); break;
+    case 'go': A.go(m.section); break;
+    case 'select': if (m.index >= 0 && m.index < S.Indicators.length) { U.selected = m.index; if (U.section === 'indicators') render(); } break;
+    case 'update': U.update = m; if (U.section === 'about') render(); break;
+    case 'svg': {
+      const sel = S.Indicators[U.selected]; if (!sel) break;
+      U.svgs = U.svgs || {}; U.svgs[m.path] = m.data;
+      sel[m.which === 'svgLive' ? 'SvgLive' : 'SvgMuted'] = m.path;
+      live(true); render(); break;
+    }
+    case 'file':
+      if (m.which === 'mute') S.SoundFileMute = m.path; else S.SoundFileUnmute = m.path;
+      dirty(); render(); break;
+    case 'levels':
+      U.devices.forEach((d, i) => {
+        const el = document.getElementById('lvl-' + i); if (!el) return;
+        const v = Math.min(100, Math.round(Math.sqrt(m.levels[d.id] || 0) * 100));
+        el.style.width = v + '%'; el.style.background = v > 70 ? '#F5C67A' : '#4CC38A';
+        // Follow volume changes made elsewhere (Windows settings), but not while dragging.
+        const vol = m.volumes && m.volumes[d.id];
+        const r = document.getElementById('vol-' + i);
+        if (vol != null && r && document.activeElement !== r && Number(r.value) !== vol) {
+          r.value = vol; d.volume = vol;
+          const n = document.getElementById('vol-n-' + i); if (n) n.textContent = vol;
+        }
+      });
+      break;
+  }
+});
+post({ type: 'ready' });
+</script>
+</body>
+</html>

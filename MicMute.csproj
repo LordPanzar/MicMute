@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>MicMute</AssemblyName>
+    <RootNamespace>MicMute</RootNamespace>
+    <Product>MicMute</Product>
+    <Description>Demp mikrofonen med en hurtigtast</Description>
+    <Version>1.2.0</Version>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <RepositoryUrl>https://github.com/LordPanzar/MicMute</RepositoryUrl>
+    <!-- .NET is bundled so the app runs on any Windows PC without installing the runtime. -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <SatelliteResourceLanguages>nb;no</SatelliteResourceLanguages>
+    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
+    <PackageReference Include="Svg" Version="3.4.7" />
+    <EmbeddedResource Include="settings.html" LogicalName="MicMute.settings.html" />
+  </ItemGroup>
+
+</Project>
